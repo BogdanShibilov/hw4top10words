@@ -1,9 +1,9 @@
 package main
 
 import (
-	"cmp"
 	"fmt"
 	"slices"
+	"sort"
 	"strings"
 )
 
@@ -15,7 +15,7 @@ func GetTopTenWords(text string) []string {
 	words := strings.Split(text, " ")
 	wordsFrequency := getWordsFrequency(words)
 	wordsSet := setFrom(words)
-	sortDescByFrequency(wordsSet, wordsFrequency)
+	sortDescByFrequencyWithSortSlice(wordsSet, wordsFrequency)
 
 	if len(wordsSet) <= 10 {
 		return wordsSet
@@ -45,9 +45,17 @@ func setFrom(slice []string) []string {
 	return set
 }
 
-func sortDescByFrequency(wordsSet []string, wordsFrequency map[string]int) {
-	slices.SortFunc(wordsSet, func(left, right string) int {
-		return cmp.Compare(wordsFrequency[right], wordsFrequency[left])
+//func sortDescByFrequency(wordsSet []string, wordsFrequency map[string]int) {
+//	slices.SortFunc(wordsSet, func(left, right string) int {
+//		return cmp.Compare(wordsFrequency[right], wordsFrequency[left])
+//	})
+//}
+
+func sortDescByFrequencyWithSortSlice(wordsSet []string, wordsFrequency map[string]int) {
+	sort.Slice(wordsSet, func(i, j int) bool {
+		leftWord := wordsSet[i]
+		rightWord := wordsSet[j]
+		return wordsFrequency[leftWord] > wordsFrequency[rightWord]
 	})
 }
 
